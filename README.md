@@ -1,5 +1,5 @@
 # PocketBanner
-Banner printing on Casio FX-820P (data compression in BASIC)
+Banner printing on Casio FX-820P (data compression in BASIC). Program saved as WAV file is part of release ZIP file.
 
 I thought it would be fun to create a banner printing program for the Casio FX-820P, a 1980s pocket computer with a built-in printer. With only 3.6K of RAM available using a simple bitmap for 26, 20*5, characters would consume most of the RAM.
 
