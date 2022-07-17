@@ -1,0 +1,231 @@
+10  REM Do not type REM lines into computer
+90  REM User input to special string '$' which can hold 30 characters
+91  REM We parse string L->R matching each letter to the alphabet in the
+92  REM DATA statements starting at 1400. The index into alphabet is used
+93  REM to calculate the starting line number of DATA statement for that
+94  REM letter's bitmap. We then RESTORE to that letter's DATA statement.
+
+100 INPUT "TEXT",$:W=0
+110 RESTORE 1400
+120 W=W+1:A$=MID$(W,1): IF A$="" THEN GOTO 160
+130 FOR X=1 TO 29:READ B$
+140 IF A$=B$ THEN GOSUB 200
+150 NEXT X
+160 IF W<10 THEN GOTO 110
+170 END
+
+
+198 REM Calculates line number of character DATA to RESTORE
+199 REM Character DATA: A line 1500, B line 1600, etc
+
+200 X=X*100+1400:MODE 7
+210 RESTORE X:GOSUB 1000
+220 MODE 8:X=29:RETURN 
+
+
+994  REM Read/print til DATA 0,n. If n>0 add blank column after char
+995  REM DATA -3,2010...repeat line 2010 3 times 
+996  REM DATA 5,X...repeat X 5 times
+997  REM R=repeat char T$ R# times, T$=chars to print
+998  REM N=# times to repeat Line #L, L=Line# to repeat N#
+999  REM C=#chars printed in current line
+
+1000 L=0:READ R: IF R=0 THEN GOTO 1200
+1010 N=1:IF R<0 THEN N=-1*R:READ L
+1020 FOR I=1 TO N: C=0
+1030 IF L>0 THEN RESTORE L:READ R
+1040 READ T$
+1050 FOR J=1 TO R
+1060 C=C+LEN(T$):PRINT T$;
+1070 NEXT J
+1080 IF C<20 THEN READ R:GOTO 1040
+1090 NEXT I
+1100 GOTO 1000
+1200 READ R: IF R=0 THEN RETURN
+1210 RESTORE 4110:GOTO 1000
+
+1398 REM Data for converting character to index #
+1399 REM "o" is 'Ext Shft A'
+1400 DATA A,B,C,D,E,F,G,H,I,J,K,L,M,N,O
+1410 DATA P,Q,R,S,T,U,V,W,X,Y,Z," ","!","o"
+
+
+1490 REM V2 w/all letters 345 bytes left
+1491 REM V3 w/all letters 657 bytes left, saved 312 bytes
+1492 REM V4 w/all letters 814 bytes left, saved 469
+
+1499 REM A
+1500 DATA 10,X,10," "
+1510 DATA 10," ",8,X,2," "
+1520 DATA 10," ",1,X,6," ",3,X
+1530 DATA 10," ",8,X,2," "
+1540 DATA 10,X,10," ",0,1
+
+1599 REM B
+1600 DATA 20,X,-2,1610
+1610 DATA 1,X,9," ",1,X,8," ",1,X
+1620 DATA 1," XX",5," ",1,"XX XX",4," ",1,"XX "
+1630 DATA 3," ",5,X,5," ",4,X,3," ",0,1
+
+1699 REM C
+1700 DATA 1," ",18,X,1," ",-2,1710
+1710 DATA 1,X,18," ",1,X
+1720 DATA 3," ",1,X,12," ",1,X,3," ",0,1
+
+1799 REM D
+1800 DATA 20,X,-2,1810
+1810 DATA 1,X,18," ",1,X
+1820 DATA 1," XX",14," ",1,"XX "
+1830 DATA 3," ",14,X,3," ",0,1
+
+1899 REM E 
+1900 DATA 20,X,-3,1910
+1910 DATA 1,X,9," ",1,X,8," ",1,X
+1920 DATA 1,X,18," ",1,X,0,1
+
+1999 REM F
+2000 DATA 20,X,-3,2010
+2010 DATA 10," ",1,X,8," ",1,X
+2020 DATA 19," ",1,X,0,1
+
+2099 REM G 
+2100 DATA 1," ",18,X,1," "
+2110 DATA 1,X,18," ",1,X
+2120 DATA 1,X,8," ",2,X,8," ",1,X
+2130 DATA 1," XX",7," ",1,X,6," ",1,"XX "
+2140 DATA 3," ",7,X,5," ",2,X,3," ",0,1
+
+2199 REM H
+2200 DATA 20,X,-3,2210
+2210 DATA 10," ",1,X,9," "
+2220 DATA 20,X,0,1
+
+2299 REM I
+2300 DATA -2,2310
+2310 DATA 1,X,18," ",1,X
+2320 DATA 20,X,-2,2330
+2330 DATA 1,X,18," ",1,X,0,1
+
+2399 REM J
+2400 DATA 1," ",4,X,14," ",1,X
+2410 DATA 1,X,18," ",1,X
+2420 DATA 1," ",19,X,-2,2430
+2430 DATA 19," ",1,X,0,1
+
+2499 REM K
+2500 DATA 20,X,9," ",3,X,8," "
+2510 DATA 6," ",3,X,3," ",3,X,5," "
+2520 DATA 3," ",3,X,9," ",3,X,2," "
+2530 DATA 3,X,15," ",2,X,0,0
+
+2599 REM L
+2600 DATA 20,X,-4,2610
+2610 DATA 1,X,19," "
+2620 DATA 0,1
+
+2699 REM M 
+2700 DATA 20,X,DATA 14," ",4,X,2," "
+2710 DATA 10," ",4,X,6," "
+2720 DATA 14," ",4,X,2," "
+2730 DATA 20,X,0,1
+
+2799 REM N 
+2800 DATA 20,X,14," ",4,X,2," "
+2810 DATA 6," ",8,X,6," "
+2820 DATA 2," ",4,X,14," "
+2830 DATA 20,X,0,1
+
+2899 REM O
+2900 DATA 3," ",14,X,3," "
+2910 DATA 1," XX",14," ",1,"XX "
+2920 DATA 1,X,18," ",1,X
+2930 DATA 1," XX",14," ",1,"XX "
+2940 DATA 3," ",14,X,3," ",0,1
+
+2999 REM P 
+3000 DATA 20,X,-2,3010
+3010 DATA 10," ",1,X,8," ",1,X
+3020 DATA 11," ",1,X,6," ",1,"X "
+3030 DATA 12," ",6,X,2," ",0,1
+
+3099 REM Q 
+3100 DATA 3," ",14,X,3," "
+3110 DATA 1," XX",14," ",1,"XX "
+3120 DATA 1,"X   X",14," ",1,X
+3130 DATA 1," XX",14," ",1,"XX "
+3140 DATA 1,"X  ",14,X,3," ",0,1
+
+3199 REM R 
+3200 DATA 20,X,10," ",2,X,7," ",1,X
+3210 DATA 6," ",4,X,1," X",7," ",1,X
+3220 DATA 2," ",4,X,6," ",1,X,5," ",1,"X "
+3230 DATA 2,X,10," ",6,X,2," ",0,1
+
+3299 REM S 
+3300 DATA 1,"   X",9," ",4,X,3," "
+3310 DATA 1," XX",8," ",2,X,4," ",1,"XX "
+3320 DATA 1,X,9," ",1,X,8," ",1,X
+3330 DATA 1," XX",5," ",2,X,7," ",1,"XX "
+3340 DATA 3," ",5,X,8," ",1,"X   ",0,1
+
+3399 REM T 538->555
+3400 DATA -2,3410
+3410 DATA 19," ",1,X
+3420 DATA 20,X,-2,3430
+3430 DATA 19," ",1,X
+3440 DATA 0,1
+
+3499 REM U 
+3500 DATA 3," ",17,X
+3510 DATA 1," XX",17," "
+3520 DATA 1,X,19," "
+3530 DATA 1," XX",17," "
+3540 DATA 3," ",17,X,0,1
+
+3599 REM V 565->587
+3600 DATA 12," ",8,X
+3610 DATA 4," ",8,X,8," "
+3620 DATA 4,X,16," "
+3630 DATA 4," ",8,X,8," "
+3640 DATA 12," ",8,X,0,1
+
+3699 REM W 587->609
+3700 DATA 20,X,2," ",5,X,13," "
+3710 DATA 7," ",4,X,9," "
+3720 DATA 2," ",5,X,13," "
+3730 DATA 20,X,0,1
+
+3799 REM X 609->637
+3800 DATA 5,X,10," ",5,X
+3810 DATA 5," ",4,X,3," ",3,X,5," "
+3820 DATA 9," ",3,X,8," "
+3830 DATA 5," ",4,X,3," ",3,X,5," "
+3840 DATA 5,X,10," ",5,X,0,1
+
+3899 REM Y 637->662
+3900 DATA 16," ",4,X
+3910 DATA 11," ",5,X,4," "
+3920 DATA 11,X,9," "
+3930 DATA 11," ",5,X,4," "
+3940 DATA 16," ",4,X,0,1
+
+3999 REM Z
+4000 DATA 1,X,17," ",2,X
+4010 DATA 1,X,13," ",4,X,1," X"
+4020 DATA 1,X,5," ",8,X,5," ",1,X
+4030 DATA 1,"X ",4,X,13," ",1,X
+4040 DATA 2,X,17," ",1,X,0,1
+
+4099 REM Space
+4100 DATA -6,4110
+4110 DATA 20," "
+4120 DATA 0,0
+
+4299 REM Smiley V4, Ext Shft A 
+4300 DATA 5," ",10,X,5," "
+4310 DATA 3," ",2,X,2," ",2,X,6," ",2,X,3," "
+4320 DATA 2," ",1,X,3," ",1,X,6," ",1,X,3," ",1,X,2," "
+4330 DATA 2," ",1,X,3," ",1,X,10," ",1,X,2," "
+4340 DATA 2," ",1,X,3," ",1,X,6," ",1,X,3," ",1,X,2," "
+4350 DATA 3," ",2,X,2," ",2,X,6," ",2,X,3," "
+4360 DATA 5," ",10,X,5," ",0,1
